@@ -1,4 +1,6 @@
-const Pool = require('pg');
-require('dotenv').config();
+const pool = require('./pool');
 
-const pool = new Pool()
+// establishing database connection
+pool.on('connect', ()=>{
+    console.log('connected to database')
+})
