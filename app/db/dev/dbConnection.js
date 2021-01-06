@@ -98,3 +98,51 @@ pool.on('connect', ()=>{
         pool.end();
       });
   };
+
+/**
+ * Drop Bus Table
+ */
+ const dropBusTable = () => {
+    const busDropQuery = 'DROP TABLE IF EXISTS bus';
+    pool.query(busDropQuery)
+      .then((res) => {
+        console.log(res);
+        pool.end();
+      })
+      .catch((err) => {
+        console.log(err);
+        pool.end();
+      });
+  };
+
+/**
+ * Drop Trip Table
+ */
+ const dropTripTable = () => {
+    const tripDropQuery = 'DROP TABLE IF EXISTS trip';
+    pool.query(tripDropQuery)
+      .then((res) => {
+        console.log(res);
+        pool.end();
+      })
+      .catch((err) => {
+        console.log(err);
+        pool.end();
+      });
+  };
+
+/**
+ * Drop Booking Table
+ */
+ const dropBookingTable = () => {
+    const bookingDropQuery = 'DROP TABLE IF EXISTS booking';
+    pool.query(bookingDropQuery)
+      .then((res) => {
+        console.log(res);
+        pool.end();
+      })
+      .catch((err) => {
+        console.log(err);
+        pool.end();
+      });
+  };
