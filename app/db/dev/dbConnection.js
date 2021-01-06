@@ -157,3 +157,14 @@ pool.on('connect', ()=>{
     createTripTable();
     createBookingTable();
   }
+
+/**
+ * Drop All Tables
+ */
+
+ const dropAllTables = () => {
+    dropUserTable();
+    dropBusTable();
+    dropTripTable();
+    dropBookingTable();
+ }
