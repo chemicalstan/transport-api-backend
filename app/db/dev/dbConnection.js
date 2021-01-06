@@ -68,7 +68,7 @@ pool.on('connect', ()=>{
  * Create Booking Table
  */
 
- const bookingCreateTable = ()=>{
+ const createBookingTable = ()=>{
      const bookingCreateQuery = `CREATE TABLE IF NOT EXISTS booking(id SERIAL PRIMARY KEY, trip_id INTEGER REFERENCES trip(id) ON DELETE CASCADE, bus_id INTEGER REFERENCES bud(id) ON DELETE CASCADE, trip_date DATE NOT NULL, seat_number INTEGER UNIQUE, first_name VARCAR(100), last_name VARCAR(100), email VARCAR(100) NOT NULL, created_on DATE NOT NULL, PRIMARY KEY (id, trip_id, user_id)`;
 
      pool.query(bookingCreateQuery)
@@ -146,3 +146,14 @@ pool.on('connect', ()=>{
         pool.end();
       });
   };
+
+/**
+ * Create All Tables
+ */
+
+  const createAllTables = () => {
+    createUserTable();
+    createBusTable();
+    createTripTable();
+    createBookingTable();
+  }
