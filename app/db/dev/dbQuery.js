@@ -1,7 +1,7 @@
-const pool = require('./pool');
+import pool from './pool'
 
 
-module.exports= {
+export default {
     /**
    * DB Query
    * @param {object} req

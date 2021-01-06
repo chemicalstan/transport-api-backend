@@ -1,6 +1,7 @@
-const pool = require('./pool');
+const pool = require('./pool')
 
 // establishing database connection
+    // listening for connect even
 pool.on('connect', ()=>{
     console.log('connected to database')
 })
@@ -15,12 +16,13 @@ pool.on('connect', ()=>{
  */
 
  const createUserTable = ()=>{
-     const userCreateQuery = `CREATE TABEL IF NOT EXISTS users(id SERIAL PRIMARY KEY, email VARCAR(100) UNIQUE NOT NULL, first_name VARCAR(100), last_name VARCAR(100), password VARCAR(100) NOT NULL, created_on DATE NOT NULL)`;
+     const userCreateQuery = `CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, email VARCHAR(100) UNIQUE NOT NULL, first_name VARCHAR(100), last_name VARCHAR(100), password VARCHAR(100) NOT NULL, created_on DATE NOT NULL)`;
 
      // passing query to pool to return a promise
      pool.query(userCreateQuery)
         .then(res=>{
             console.log(res);
+            console.log('user table created')
             pool.end();
         })
         .catch(err=>{
@@ -33,29 +35,32 @@ pool.on('connect', ()=>{
  * Create Buses Table
  */
  const createBusTable = ()=>{
-     const busCreatQuery = `CREATE TABLE IF NOT EXISTS bus(id SERIAL PRIMARY KEY, number_plate VARCAR(100) NOT NULL, manufacturer VARCAR(100) NOT NULL, model VARCAR(100) NOT NULL, year VARCAR(100), capacity INTEGER NOT NULL, created_on DATE NOT NULL)`;
+     const busCreatQuery = `CREATE TABLE IF NOT EXISTS bus(id SERIAL PRIMARY KEY, number_plate VARCHAR(100) NOT NULL, manufacturer VARCHAR(100) NOT NULL, model VARCHAR(100) NOT NULL, year VARCHAR(100), capacity INTEGER NOT NULL, created_on DATE NOT NULL)`;
 
-     pool.query(createBusTable)
+     pool.query(busCreatQuery)
         .then(res=>{
             console.log(res);
+            console.log('bus table created')
             pool.end();
         })
         .catch(err=>{
             console.log(err);
             pool.end();
         })
- }; // createBusTabel end
+ }; // createBusTable end
 
  /**
  * Create Trip Table
  */
 
  const createTripTable = ()=>{
-    const tripCreateQuery = `CREATE TABLE IF NOT EXISTS trip(id SERIAL PRIMARY KEY, bus_id INTEGER REFERENCES bus(id) ON DELETE CASCADE, origin VARCAR(300) NOT NULL, destination VARVAR(300) NOT NULL, trip_date DATE NOT NULL, fare FLOAT NOT NULL, status FLOAT DEFAULT(1.00), created_on DATE NOT NULL)`;
+    const tripCreateQuery = `CREATE TABLE IF NOT EXISTS trip(id SERIAL PRIMARY KEY, bus_id INTEGER REFERENCES bus(id) ON DELETE CASCADE, origin VARCHAR(300) NOT NULL, destination VARCHAR(300) NOT NULL, trip_date DATE NOT NULL, fare FLOAT NOT NULL, status FLOAT DEFAULT(1.00), created_on DATE NOT NULL)`;
 
     pool.query(tripCreateQuery)
         .then(res=>{
             console.log(res)
+            console.log('trip table created')
+
             pool.end()
         })
         .catch(err=>{
@@ -69,11 +74,22 @@ pool.on('connect', ()=>{
  */
 
  const createBookingTable = ()=>{
-     const bookingCreateQuery = `CREATE TABLE IF NOT EXISTS booking(id SERIAL PRIMARY KEY, trip_id INTEGER REFERENCES trip(id) ON DELETE CASCADE, bus_id INTEGER REFERENCES bud(id) ON DELETE CASCADE, trip_date DATE NOT NULL, seat_number INTEGER UNIQUE, first_name VARCAR(100), last_name VARCAR(100), email VARCAR(100) NOT NULL, created_on DATE NOT NULL, PRIMARY KEY (id, trip_id, user_id)`;
+     const bookingCreateQuery = `CREATE TABLE IF NOT EXISTS booking(id SERIAL, 
+        trip_id INTEGER REFERENCES trip(id) ON DELETE CASCADE,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        bus_id INTEGER REFERENCES bus(id) ON DELETE CASCADE,
+        trip_date DATE, 
+        seat_number INTEGER UNIQUE,      
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) NOT NULL,      
+        created_on DATE NOT NULL,
+        PRIMARY KEY (id, trip_id, user_id))`;
 
      pool.query(bookingCreateQuery)
         .then((res)=>{
             console.log(res)
+            console.log('booking table created')
             pool.end();
         })
         .catch(err=>{
@@ -168,3 +184,17 @@ pool.on('connect', ()=>{
     dropTripTable();
     dropBookingTable();
  }
+
+//  Listening for remove event
+pool.on('remove', () => {
+    console.log('client removed');
+    //exiting node process
+    process.exit(0);
+ });
+
+module.exports = {
+    createAllTables,
+    dropAllTables
+}
+
+require('make-runnable')
