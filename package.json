@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "create-dev-tables": "babel-node ./app/db/dev/dbConnection createAllTables",
+    "drop-dev-tables": "babel-node ./app/db/dev/dbConnection dropAllTables",
     "start": "nodemon --watch . --exec babel-node -- server",
     "setup": "npm-run-all -p start create-dev-tables"
   },
@@ -12,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
-    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
