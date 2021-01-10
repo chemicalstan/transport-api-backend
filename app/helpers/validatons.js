@@ -1,6 +1,7 @@
 // Helper methods that would foster reusability across project
 
 const env = require('../../env');
+const jwt = require('jsonwebtoken')
 
 /**
    * isValidEmail helper method
@@ -50,6 +51,23 @@ const env = require('../../env');
         return true;
     }
   };
+
+/**
+ * Generate Token
+ * @param {string} id
+ * @returns {string} token
+ */
+
+  const generateUserToken = (email, id, is_admin, first_name, last_name) => {
+    const token = jwt.sign({
+        email,
+        user_id: id,
+        is_admin,
+        first_name,
+        last_name
+    }, env.secrete, {expiresIn: '3d'});
+    return token;
+  }
 
   module.exports = {
       isValidEmail,
