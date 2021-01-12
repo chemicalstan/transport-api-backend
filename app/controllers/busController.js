@@ -35,7 +35,7 @@ const addBusDetails = async (req, res) => {
     created_on
   };
   try {
-    const { rows } = dbQuery(createBusQuery, values);
+    const { rows } = await dbQuery(createBusQuery, values);
     const dbResponse = rows[0];
     successMessage.data = dbResponse;
     return res.status(status.created).send(successMessage);
@@ -44,3 +44,31 @@ const addBusDetails = async (req, res) => {
       return res.status(status.error).send(errorMessage);
   }
 };
+
+/**
+ * Get All Buses
+ * @param {object} req 
+ * @param {object} res 
+ * @returns {object} Buses Array
+ */
+const getAllBuses = async (req, res)=>{
+    const getBusesQuery = `SELECT * FROM bus ORDER BY id DESC`;
+    try {
+        const { rows } = await dbQuery(getBusesQuery);
+        const dbResponse = rows;
+        if(dbResponse[0] === undefined){
+            errorMessage.error = 'There are no buses';
+            return res.status(status.notfound).send(errorMessage);
+        }
+        successMessage.data = dbResponse;
+        return res.status(status.success).send(successMessage);
+    } catch (error) {
+        errorMessage.error = 'An error occured while fetching buses';
+        return res.status(status.error).send(errorMessage);
+    }
+}
+
+module.exports = {
+    addBusDetails,
+    getAllBuses
+}
