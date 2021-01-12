@@ -4,7 +4,6 @@ const {
   isEmpty,
   isValidEmail,
   validatePassword,
-  empty,
   hashPassword,
   generateUserToken
 } = validations;

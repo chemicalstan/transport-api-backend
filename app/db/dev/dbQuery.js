@@ -4,9 +4,9 @@ const pool = require('./pool')
 module.exports =  {
     /**
    * DB Query
-   * @param {object} req
-   * @param {object} res
-   * @returns {object} object
+   * @param {object} Query
+   * @param {object} Values
+   * @returns {object} DB Response Object
    */
 
    query(queryText, params){
