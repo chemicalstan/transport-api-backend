@@ -26,14 +26,14 @@ const addBusDetails = async (req, res) => {
   }
   // add bus query
   const createBusQuery = `INSERT INTO bus(number_plate, manufacturer, model, year, capacity, created_on) VALUES($1, $2, $3, $4, $5. $6) returning *`;
-  const values = {
+  const values = [
     number_plate,
     manufacturer,
     model,
     year,
     capacity,
     created_on
-  };
+  ];
   try {
     const { rows } = await dbQuery(createBusQuery, values);
     const dbResponse = rows[0];

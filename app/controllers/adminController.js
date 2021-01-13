@@ -62,13 +62,13 @@ const createAdmin = async (req, res) => {
       VALUES($1, $2, $3, $4, $5)
       returning *`;
 
-  const values = {
+  const values = [
     email,
     first_name,
     last_name,
     hashedPassword,
     created_on
-  };
+  ];
 
   try {
       const { rows } = dbQuery.query(createUserQuery, values)
@@ -120,10 +120,10 @@ const createAdmin = async (req, res) => {
       errorMessage.error = 'User Cannot be found';
       return res.status(status.notfound).send(errorMessage);
     }
-    const values = {
+    const values = [
       isAdmin,
       id
-    };
+    ];
     const response = dbQuery(updateUserQuery, values);
     const dbResult = response.rows[0];
     delete dbResult.password;
