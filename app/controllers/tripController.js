@@ -34,14 +34,7 @@ const createTrip = async (req, res) => {
     return res.status(status.bad).send(errorMessage);
   }
   const createTripQuery = `INSERT INTO trip(bus_id, origin, destination, trip_date, fare, created_on) VALUES($1, $2, $3, $4, $5, $6) returning *`;
-  const values = {
-    bus_id,
-    origin,
-    destination,
-    trip_date,
-    fare,
-    created_on
-  };
+  const values = [bus_id, origin, destination, trip_date, fare, created_on];
   try {
     const { rows } = await dbQuery(createTripQuery, values);
     const dbResponse = rows[0];
@@ -55,8 +48,8 @@ const createTrip = async (req, res) => {
 
 /**
  * Get all trips
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  * @returns {object} trips array
  */
 const getAllTrips = async (req, res) => {
@@ -71,7 +64,44 @@ const getAllTrips = async (req, res) => {
     successMessage.data = dbResponse;
     return res.send(status.success).send(successMessage);
   } catch (error) {
+    errorMessage.error = "Operation was not successful";
+    return res.status(status.error).send(errorMessage);
+  }
+};
+/**
+ * Cancel Trip
+ * @param {object} req 
+ * @param {object} res 
+ * @returns {void} return Trip Cancelled Succesfully
+ */
+const cancelTrip = async (req, res) => {
+  const { tripId } = req.params;
+  const { is_admin } = req.user;
+  const { cancelled } = trip_status;
+  if (!is_admin === true) {
+    errorMessage.error = "Sorry You are unauthorized to cancel a trip";
+    return res.status(status.unauthorized).send(errorMessage);
+  }
+  if (empty(tripId)) {
+    errorMessage.error = "Please select the trip you want to cancel";
+    return res.status(status.bad).send(errorMessage);
+  }
+  const cancelTripQuery = `UPDATE trip SET status = $1 WHERE id = $2 returning *`;
+  const values = [cancelled, tripId];
+  try {
+    const { rows } = await dbQuery(cancelTripQuery, values);
+    const dbResponse = rows[0];
+    if (!dbResponse) {
+      errorMessage.error = "There is no trip with that id";
+      return res.status(status.notfound).send(errorMessage);
+    }
+    successMessage.data = {};
+    successMessage.data.message = 'Trip cancelled successfully';
+    return res.status(status.success).send(successMessage);
+  } catch (error) {
     errorMessage.error = 'Operation was not successful';
     return res.status(status.error).send(errorMessage);
   }
 };
+
+const getAllTripsByOrigin = async (req, res) => {};
