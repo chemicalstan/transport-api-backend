@@ -104,4 +104,29 @@ const cancelTrip = async (req, res) => {
   }
 };
 
-const getAllTripsByOrigin = async (req, res) => {};
+/**
+ * filter trips by origin
+ * @param {object} req 
+ * @param {object} res 
+ * @returns {object} return trips
+ */
+const filterTripsByOrigin = async (req, res) => {
+  const {origin} = req.body;
+  if (isEmpty(origin)) {
+    errorMessage.error = 'Origin field cannot be empty';
+    return res.status(status.bad).send(errorMessage);
+  }
+  const filterTripsByOriginQuery = `SELECT * FROM trip WHERE origin = $1 ORDER BY id DESC`;
+  try {
+    const { rows } = await dbQuery(filterTripsByOriginQuery, [origin]);
+    const dbResponse = rows
+    if (!dbResponse[0]) {
+      errorMessage.error = 'No trip with that origin';
+      return res.status(status.notfound).send(errorMessage);
+    }
+    successMessage.data = dbResponse;
+    return res.status(status.success).send(successMessage)
+  } catch (error) {
+    
+  }
+};
