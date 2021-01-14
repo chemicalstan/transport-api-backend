@@ -160,3 +160,11 @@ const filterTripByDestination = async (req, res) => {
     return res.status(status.error).send(errorMessage);
   }
 };
+
+module.exports = {
+  createTrip,
+  cancelTrip,
+  getAllTrips,
+  filterTripsByOrigin,
+  filterTripByDestination
+};
