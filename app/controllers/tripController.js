@@ -70,8 +70,8 @@ const getAllTrips = async (req, res) => {
 };
 /**
  * Cancel Trip
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  * @returns {void} return Trip Cancelled Succesfully
  */
 const cancelTrip = async (req, res) => {
@@ -96,37 +96,67 @@ const cancelTrip = async (req, res) => {
       return res.status(status.notfound).send(errorMessage);
     }
     successMessage.data = {};
-    successMessage.data.message = 'Trip cancelled successfully';
+    successMessage.data.message = "Trip cancelled successfully";
     return res.status(status.success).send(successMessage);
   } catch (error) {
-    errorMessage.error = 'Operation was not successful';
+    errorMessage.error = "Operation was not successful";
     return res.status(status.error).send(errorMessage);
   }
 };
 
 /**
  * filter trips by origin
- * @param {object} req 
- * @param {object} res 
+ * @param {object} req
+ * @param {object} res
  * @returns {object} return trips
  */
 const filterTripsByOrigin = async (req, res) => {
-  const {origin} = req.body;
+  const { origin } = req.body;
   if (isEmpty(origin)) {
-    errorMessage.error = 'Origin field cannot be empty';
+    errorMessage.error = "Origin field cannot be empty";
     return res.status(status.bad).send(errorMessage);
   }
   const filterTripsByOriginQuery = `SELECT * FROM trip WHERE origin = $1 ORDER BY id DESC`;
   try {
     const { rows } = await dbQuery(filterTripsByOriginQuery, [origin]);
-    const dbResponse = rows
+    const dbResponse = rows;
     if (!dbResponse[0]) {
-      errorMessage.error = 'No trip with that origin';
+      errorMessage.error = "No trip with that origin";
       return res.status(status.notfound).send(errorMessage);
     }
     successMessage.data = dbResponse;
-    return res.status(status.success).send(successMessage)
+    return res.status(status.success).send(successMessage);
   } catch (error) {
-    
+    errorMessage.error = "Operation was not successful";
+    return res.status(status.error).send(errorMessage);
+  }
+};
+
+/**
+ * filter trip by destination
+ * @param {object} req
+ * @param {object} res
+ * @returns {object} return trips
+ */
+const filterTripByDestination = async (req, res) => {
+  const { destination } = req.body;
+  if (isEmpty(destination)) {
+    errorMessage.error = "Please enter a valid destination";
+    return res.status(status.bad).send(errorMessage);
+  }
+
+  const filterTripByDestinationQuery = `SELECT * FROM trip WHERE destination = $1 ORDER BY id DESC`;
+  try {
+    const { rows } = await dbQuery(filterTripByDestinationQuery, [destination]);
+    const dbResponse = rows[0];
+    if (!dbResponse[0] === "true") {
+      errorMessage.error = "No trip with this destination";
+      return res.status(status.notfound).send(errorMessage);
+    }
+    successMessage.data = dbResponse;
+    return res.status(status.success).send(successMessage);
+  } catch (error) {
+    errorMessage.error = "Operation not successful";
+    return res.status(status.error).send(errorMessage);
   }
 };
