@@ -50,6 +50,12 @@ const createBooking = async (req, res) => {
   }
 };
 
+/**
+ * Get All Bookings
+ * @param {object} req
+ * @param {object} res
+ * @returns {object} bookings array
+ */
 const getAllBookings = async (req, res) => {
   const { user_id, is_admin } = req.user;
 
@@ -82,6 +88,38 @@ const getAllBookings = async (req, res) => {
     return res.status(status.success).send(successMessage);
   } catch (error) {
     errorMessage.error = "An error Occured";
+    return res.status(status.error).send(errorMessage);
+  }
+};
+
+/**
+ * Delete A Booking
+ * @param {object} req
+ * @param {object} res
+ * @returns {void}  response booking deleted succesfully
+ */
+const deleteBooking = async (req, res) => {
+  const { bookingId } = req.params;
+  const { user_id } = req.user;
+
+  if (empty(bookingId)) {
+    errorMessage.error = "Please select a booking to delete";
+    return res.status(status.bad).send(errorMessage);
+  }
+  const deleteBookingQuery = `DELETE FROM booking WHERE id = $1 AND user_id = $2 returning *`;
+  const values = [bookingId, user_id];
+  try {
+    const { rows } = await dbResponse(deleteBookingQuery, values);
+    const dbResponse = rows[0];
+    if (!dbResponse) {
+      errorMessage.error = "You have no booking with that id";
+      return res.status(status.notfound).send(errorMessage);
+    }
+    successMessage.data = {};
+    successMessage.data.message = "Booking deleted successfully";
+    return res.status(status.success).send(successMessage);
+  } catch (error) {
+    errorMessage.error = "An error occured";
     return res.status(status.error).send(errorMessage);
   }
 };
