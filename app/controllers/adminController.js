@@ -71,7 +71,7 @@ const createAdmin = async (req, res) => {
   ];
 
   try {
-      const { rows } = dbQuery.query(createUserQuery, values)
+      const { rows } = await dbQuery.query(createUserQuery, values)
       const dbResponse = rows[0];
       delete dbResponse.password
       const token = generateUserToken(dbResponse.email, dbResponse.id, dbResponse.is_admin, dbResponse.first_name, dbResponse.last_name);
@@ -114,7 +114,7 @@ const createAdmin = async (req, res) => {
   const findUserQuery = 'SELECT * FROM users WHERE id=$1';
   const updateUserQuery = `UPDATE users SET is_admin=$1 WHERE id=$2 returning *`;
   try {
-    const { rows } = await dbQuery(findUserQuery, id);
+    const { rows } = await dbQuery(findUserQuery, [id]);
     const dbResponse = rows[0]
     if (!dbResponse) {
       errorMessage.error = 'User Cannot be found';
@@ -124,7 +124,7 @@ const createAdmin = async (req, res) => {
       isAdmin,
       id
     ];
-    const response = dbQuery(updateUserQuery, values);
+    const response = await dbQuery(updateUserQuery, values);
     const dbResult = response.rows[0];
     delete dbResult.password;
     successMessage.data = dbResult;
