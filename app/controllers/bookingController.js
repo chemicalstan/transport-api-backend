@@ -123,3 +123,52 @@ const deleteBooking = async (req, res) => {
     return res.status(status.error).send(errorMessage);
   }
 };
+
+/**
+ * Update Booking Seat
+ * @param {object} req
+ * @param {object} res
+ * @returns {object} reflection object
+ */
+const changeBookingSeat = async (req, res) => {
+  const { user_id } = req.user;
+  const { bookingId } = req.params;
+  const { seat_number } = req.body;
+  if (empty(bookingId)) {
+    errorMessage.error = "Please select a booking to update";
+    return res.status(status.bad).send(errorMessage);
+  }
+  if (empty(seat_number)) {
+    errorMessage.error = "Seat number is needed";
+    return res.status(status.bad).send(errorMessage);
+  }
+  const getBookingQuery = `SELECT * FROM booking WHERE id = $1 AND user_id = $2`;
+  const changeBookingSeatQuery = `UPDATE booking SET seat_number = $1 WHERE user_id = $2 AND id = $3 returning *`;
+  const values = [seat_number, user_id, bookingId];
+  try {
+    const { rows } = await dbQuery(getBookingQuery, [bookingId, user_id]);
+    const dbResponse = rows;
+    if (dbResponse[0] === undefined) {
+      errorMessage.error = "Booking not found";
+      return res.status(status.notfound).send(errorMessage);
+    }
+    const response = await dbQuery(changeBookingSeatQuery, values);
+    const dbResult = response.rows[0];
+    successMessage.data = dbResult;
+    return res.status(status.success).send(successMessage);
+  } catch (error) {
+    if (error.routine === "_bt_check_unique") {
+      errorMessage.error = "Seat Number already taken";
+      return res.status(status.conflict).send(errorMessage);
+    }
+    errorMessage.error = "Operation was not successful";
+    return res.status(status.error).send(errorMessage);
+  }
+};
+
+module.exports = {
+  createBooking,
+  getAllBookings,
+  deleteBooking,
+  changeBookingSeat
+};
