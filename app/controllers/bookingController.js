@@ -1,5 +1,5 @@
 const moment = require("moment");
-const { empty } = require("../helpers/validatons");
+const { empty } = require("../helpers/validations");
 const { successMessage, errorMessage, status } = require("../helpers/status");
 const dbQuery = require("../db/dev/dbQuery");
 
