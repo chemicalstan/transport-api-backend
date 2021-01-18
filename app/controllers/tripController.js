@@ -1,5 +1,5 @@
 const moment = require("moment"),
-  validation = require("../helpers/validatons"),
+  validation = require("../helpers/validations"),
   Status = require("../helpers/status"),
   dbQuery = require("../db/dev/dbQuery"),
   { isEmpty, empty } = validation,

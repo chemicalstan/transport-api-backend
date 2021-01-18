@@ -1,6 +1,6 @@
 const moment = require("moment"),
   dbQuery = require("../db/dev/dbQuery"),
-  validation = require("../helpers/validatons"),
+  validation = require("../helpers/validations"),
   Status = require("../helpers/status"),
   { empty } = validation,
   { successMessage, errorMessage, status } = Status;

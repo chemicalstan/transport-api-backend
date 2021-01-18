@@ -1,6 +1,6 @@
 const dbQuery = require("../db/dev/dbQuery"),
   moment = require("moment"),
-  validations = require("../helpers/validatons"),
+  validations = require("../helpers/validations"),
   {
     isEmpty,
     isValidEmail,

@@ -1,5 +1,5 @@
 const moment = require("moment");
-const validations = require("../helpers/validatons");
+const validations = require("../helpers/validations");
 const {
   isEmpty,
   isValidEmail,
@@ -96,7 +96,7 @@ const createAdmin = async (req, res) => {
  * @returns {object} Updated User
  */
 
- const updateUserToAdmin = (req, res)=>{
+ const updateUserToAdmin = async (req, res)=>{
   const { id } = req.params;
   const { isAdmin } = req.body;
 

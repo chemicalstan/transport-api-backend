@@ -4,13 +4,15 @@ const route = express.Router();
 const verifyAuth = require('../middlewares/verifyAuth');
 
 // GET ALL BOOKINGS
-route.get('/', verifyAuth, getAllBookings);
+route.get('/bookings', verifyAuth, getAllBookings);
 
 // CREATE BOOKING
-route.post('/create', verifyAuth, createBooking);
+route.post('/bookings', verifyAuth, createBooking);
 
 // DELETE BOOKING
-route.delete('/delete/:bookingId', verifyAuth, deleteBooking);
+route.delete('/bookings/:bookingId', verifyAuth, deleteBooking);
 
 //  CHANGE BOOKING SEAT
-route.put('/update/:bookingId', verifyAuth, changeBookingSeat);
+route.put('/bookings/:bookingId', verifyAuth, changeBookingSeat);
+
+module.exports = route;

@@ -4,18 +4,18 @@ const {cancelTrip, createTrip, filterTripByDestination, filterTripsByOrigin, get
 const verifyAuth = require('../middlewares/verifyAuth')
 
 //  Create trip
-route.post('/create', verifyAuth, createTrip);
+route.post('/trips', verifyAuth, createTrip);
 
 // cancel trip
-route.put('/cancel/:tripId', verifyAuth, cancelTrip);
+route.patch('/trips/:tripId', verifyAuth, cancelTrip);
 
 //  get all trips
-route.get('/', verifyAuth, getAllTrips);
+route.get('/trips', verifyAuth, getAllTrips);
 
 // filter trip by destination
-route.get('/byDestnation', verifyAuth, filterTripByDestination);
+route.get('trips/destnation', verifyAuth, filterTripByDestination);
 
 // filter trip by origin
-route.get('/byOrigin', verifyAuth, filterTripsByOrigin);
+route.get('trips/origin', verifyAuth, filterTripsByOrigin);
 
 module.exports = route;
